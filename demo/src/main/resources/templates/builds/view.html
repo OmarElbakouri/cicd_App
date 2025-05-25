@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Détails du Build')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col">
+                <h1>Détails du Build</h1>
+                <div class="btn-group" role="group">
+                    <a th:href="@{/builds}" class="btn btn-secondary">Retour aux Builds</a>
+                    <a th:href="@{/projects/{id}(id=${build.project.id})}" class="btn btn-info">Voir le Projet</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header" th:classappend="${'bg-' + (#strings.toLowerCase(build.status) == 'success' ? 'success' : (#strings.toLowerCase(build.status) == 'failure' ? 'danger' : (#strings.toLowerCase(build.status) == 'running' ? 'warning' : 'light')))}">
+                        <h5 class="mb-0">
+                            Build #<span th:text="${build.id}"></span> - 
+                            <span th:text="${build.project.name}"></span>
+                            <span class="badge" th:classappend="${'bg-' + (#strings.toLowerCase(build.status) == 'success' ? 'success' : (#strings.toLowerCase(build.status) == 'failure' ? 'danger' : (#strings.toLowerCase(build.status) == 'running' ? 'warning' : 'secondary')))}" 
+                                  th:text="${build.status}"></span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-3 fw-bold">Projet:</div>
+                            <div class="col-md-9">
+                                <a th:href="@{/projects/{id}(id=${build.project.id})}" th:text="${build.project.name}"></a>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3 fw-bold">Dépôt:</div>
+                            <div class="col-md-9" th:text="${build.project.repositoryUrl}"></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3 fw-bold">Branche:</div>
+                            <div class="col-md-9" th:text="${build.project.branch}"></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3 fw-bold">Statut:</div>
+                            <div class="col-md-9">
+                                <span class="badge" th:classappend="${'bg-' + (#strings.toLowerCase(build.status) == 'success' ? 'success' : (#strings.toLowerCase(build.status) == 'failure' ? 'danger' : (#strings.toLowerCase(build.status) == 'running' ? 'warning' : 'secondary')))}" 
+                                      th:text="${build.status}"></span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3 fw-bold">Heure de début:</div>
+                            <div class="col-md-9" th:text="${#temporals.format(build.startTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3 fw-bold">Heure de fin:</div>
+                            <div class="col-md-9" th:text="${build.endTime != null ? #temporals.format(build.endTime, 'yyyy-MM-dd HH:mm:ss') : 'En cours'}"></div>
+                        </div>
+                        <div class="row mb-3" th:if="${build.endTime != null}">
+                            <div class="col-md-3 fw-bold">Durée:</div>
+                            <div class="col-md-9" th:text="${build.endTime != null ? #temporals.format(build.endTime, 'HH:mm:ss') + ' - ' + #temporals.format(build.startTime, 'HH:mm:ss') : 'En cours'}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Logs du Build</h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${build.logs == null || #strings.isEmpty(build.logs)}" class="alert alert-info">
+                            Aucun log disponible pour le moment.
+                        </div>
+                        <pre th:if="${build.logs != null && !#strings.isEmpty(build.logs)}" class="logs-container p-3" style="max-height: 600px; overflow-y: auto; background-color: #1E1E2D; color: #E0E0E0; border-radius: 6px; font-family: 'Consolas', 'Monaco', monospace; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word;"><code th:text="${build.logs}"></code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

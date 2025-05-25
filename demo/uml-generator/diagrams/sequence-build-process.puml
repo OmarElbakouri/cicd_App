@@ -1,0 +1,77 @@
+@startuml
+!theme plain
+skinparam sequenceArrowThickness 2
+title Diagramme de Séquence - Processus de Build
+
+actor Utilisateur
+participant "BuildController" as Controller
+participant "BuildService" as Service
+participant "BuildRepository" as Repository
+participant "Docker" as Docker
+participant "build-runner.sh" as Script
+participant "Maven" as Maven
+database "Base de données" as DB
+
+== Déclenchement d'un build ==
+
+Utilisateur -> Controller : triggerBuild(projectId)
+activate Controller
+Controller -> Service : triggerBuild(projectId)
+activate Service
+Service -> Repository : findById(projectId)
+activate Repository
+Repository -> DB : SELECT * FROM projects WHERE id = projectId
+DB --> Repository : Project
+Repository --> Service : Project
+deactivate Repository
+Service -> Service : new Build(project)
+Service -> Repository : save(build)
+activate Repository
+Repository -> DB : INSERT INTO builds
+DB --> Repository : Build
+Repository --> Service : savedBuild
+deactivate Repository
+Service --> Controller : savedBuild
+deactivate Service
+Controller --> Utilisateur : redirect to build details
+deactivate Controller
+
+== Exécution asynchrone du build ==
+
+Service -> Service : executeBuild(savedBuild)
+activate Service
+Service -> Repository : updateStatus(RUNNING)
+Repository -> DB : UPDATE builds SET status = 'RUNNING'
+Service -> Service : prepareRunnerScript()
+Service -> Service : createUniqueWorkspace(buildId)
+Service -> Docker : run(image, script, workspace)
+activate Docker
+Docker -> Script : execute(repoUrl, branch)
+activate Script
+Script -> Script : cleanWorkspace()
+alt Projet de démonstration
+  Script -> Script : createDemoProject()
+else Projet standard
+  Script -> Script : convertGitHubUrl()
+  Script -> Script : gitClone(repoUrl, branch)
+end
+Script -> Maven : mvn clean package
+activate Maven
+Maven --> Script : buildResult
+deactivate Maven
+Script --> Docker : exitCode
+deactivate Script
+Docker --> Service : exitCode, logs
+deactivate Docker
+alt exitCode == 0
+  Service -> Repository : updateStatus(SUCCESS)
+  Repository -> DB : UPDATE builds SET status = 'SUCCESS'
+else exitCode != 0
+  Service -> Repository : updateStatus(FAILURE)
+  Repository -> DB : UPDATE builds SET status = 'FAILURE'
+end
+Service -> Repository : saveLogs(logs)
+Repository -> DB : UPDATE builds SET logs = '...'
+deactivate Service
+
+@enduml

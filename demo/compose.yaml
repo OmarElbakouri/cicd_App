@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # Base de données PostgreSQL
+  db:
+    image: 'postgres:16-alpine'
+    container_name: mini-cicd-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cicd
+      POSTGRES_PASSWORD: vero
+      POSTGRES_USER: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mini-cicd-network
+
+  # Application Spring Boot
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: mini-cicd-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - '8082:8082'
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/cicd
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: vero
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8082
+      JAVA_OPTS: -Xms512m -Xmx1024m
+    volumes:
+      - ./workspace:/workspace
+    networks:
+      - mini-cicd-network
+
+  # Conteneur Docker-in-Docker pour exécuter les builds
+  dind:
+    image: 'docker:24-dind'
+    container_name: mini-cicd-dind
+    privileged: true
+    restart: unless-stopped
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    volumes:
+      - ./workspace:/workspace
+    networks:
+      - mini-cicd-network
+
+volumes:
+  postgres-data:
+    name: mini-cicd-postgres-data
+
+networks:
+  mini-cicd-network:
+    name: mini-cicd-network

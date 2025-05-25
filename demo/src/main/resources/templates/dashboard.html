@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Tableau de Bord')">
+    <title>Tableau de Bord - Mini-CI/CD</title>
+</head>
+<body class="bg-dark text-light">
+    <nav th:replace="fragments/layout :: nav"></nav>
+    <div th:replace="fragments/layout :: alerts"></div>
+
+    <div class="container">
+        <h1 class="mb-4"><i class="bi bi-speedometer2 me-2"></i>Tableau de Bord</h1>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body stats-card">
+                        <div class="icon">
+                            <i class="bi bi-code-square"></i>
+                        </div>
+                        <h5 class="card-title">Total des Projets</h5>
+                        <h2 class="card-text" th:text="${projectCount}">0</h2>
+                        <a href="/projects" class="btn btn-sm btn-outline-primary mt-2">Voir Tous</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body stats-card">
+                        <div class="icon">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                        <h5 class="card-title">Builds Réussis</h5>
+                        <h2 class="card-text" th:text="${successfulBuilds}">0</h2>
+                        <a href="/builds/success" class="btn btn-sm btn-outline-success mt-2">Voir Tous</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body stats-card">
+                        <div class="icon">
+                            <i class="bi bi-x-circle"></i>
+                        </div>
+                        <h5 class="card-title">Builds Échoués</h5>
+                        <h2 class="card-text" th:text="${failedBuilds}">0</h2>
+                        <a href="/builds/failure" class="btn btn-sm btn-outline-danger mt-2">Voir Tous</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projets Récents -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Projets Récents</h5>
+                        <a href="/projects" class="btn btn-sm btn-outline-secondary">Voir Tous</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th>Dépôt</th>
+                                        <th>Branche</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="project : ${recentProjects}">
+                                        <td th:text="${project.name}">Project Name</td>
+                                        <td th:text="${project.repositoryUrl}">Repository URL</td>
+                                        <td th:text="${project.branch}">Branch</td>
+                                        <td>
+                                            <a th:href="@{/projects/{id}(id=${project.id})}" class="btn btn-sm btn-info">Voir</a>
+                                            <a th:href="@{/builds/projects/{id}(id=${project.id})}" class="btn btn-sm btn-primary">Builds</a>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(recentProjects)}">
+                                        <td colspan="4" class="text-center">Aucun projet trouvé</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Builds Réussis -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Builds Réussis</h5>
+                        <a href="/builds" class="btn btn-sm btn-outline-secondary">Voir Tous</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Projet</th>
+                                        <th>Statut</th>
+                                        <th>Heure de début</th>
+                                        <th>Heure de fin</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="build : ${successBuilds}">
+                                        <td>
+                                            <a th:href="@{/projects/{id}(id=${build.project.id})}" th:text="${build.project.name}">Project Name</a>
+                                        </td>
+                                        <td>
+                                            <span class="badge" th:classappend="${'bg-' + (#strings.toLowerCase(build.status) == 'success' ? 'success' : (#strings.toLowerCase(build.status) == 'failure' ? 'danger' : (#strings.toLowerCase(build.status) == 'running' ? 'warning' : 'secondary')))}">
+                                            <i class="bi" th:classappend="${#strings.toLowerCase(build.status) == 'success' ? 'bi-check-circle' : (#strings.toLowerCase(build.status) == 'failure' ? 'bi-x-circle' : (#strings.toLowerCase(build.status) == 'running' ? 'bi-arrow-repeat' : 'bi-clock'))}"></i>
+                                            <span th:text="${build.status}"></span>
+                                        </span>
+                                        </td>
+                                        <td th:text="${#temporals.format(build.startTime, 'yyyy-MM-dd HH:mm:ss')}">Start Time</td>
+                                        <td th:text="${build.endTime != null ? #temporals.format(build.endTime, 'yyyy-MM-dd HH:mm:ss') : 'En cours'}">End Time</td>
+                                        <td>
+                                            <a th:href="@{/builds/{id}(id=${build.id})}" class="btn btn-sm btn-info">Voir</a>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(successBuilds)}">
+                                        <td colspan="5" class="text-center">Aucun build réussi trouvé</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Builds Échoués -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Builds Échoués</h5>
+                        <a href="/builds" class="btn btn-sm btn-outline-secondary">Voir Tous</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Projet</th>
+                                        <th>Statut</th>
+                                        <th>Heure de début</th>
+                                        <th>Heure de fin</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="build : ${failureBuilds}">
+                                        <td>
+                                            <a th:href="@{/projects/{id}(id=${build.project.id})}" th:text="${build.project.name}">Project Name</a>
+                                        </td>
+                                        <td>
+                                            <span class="badge" th:classappend="${'bg-' + (#strings.toLowerCase(build.status) == 'success' ? 'success' : (#strings.toLowerCase(build.status) == 'failure' ? 'danger' : (#strings.toLowerCase(build.status) == 'running' ? 'warning' : 'secondary')))}">
+                                            <i class="bi" th:classappend="${#strings.toLowerCase(build.status) == 'success' ? 'bi-check-circle' : (#strings.toLowerCase(build.status) == 'failure' ? 'bi-x-circle' : (#strings.toLowerCase(build.status) == 'running' ? 'bi-arrow-repeat' : 'bi-clock'))}"></i>
+                                            <span th:text="${build.status}"></span>
+                                        </span>
+                                        </td>
+                                        <td th:text="${#temporals.format(build.startTime, 'yyyy-MM-dd HH:mm:ss')}">Start Time</td>
+                                        <td th:text="${build.endTime != null ? #temporals.format(build.endTime, 'yyyy-MM-dd HH:mm:ss') : 'En cours'}">End Time</td>
+                                        <td>
+                                            <a th:href="@{/builds/{id}(id=${build.id})}" class="btn btn-sm btn-info">Voir</a>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(failureBuilds)}">
+                                        <td colspan="5" class="text-center">Aucun build échoué trouvé</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Home')">
+    <title>Home - Mini-CI/CD</title>
+</head>
+<body class="bg-dark text-light">
+    <nav th:replace="fragments/layout :: nav"></nav>
+    <div th:replace="fragments/layout :: alerts"></div>
+
+    <div class="container">
+        <div class="row mb-5 hero-section">
+            <div class="col-md-12 text-center">
+                <h1 class="display-4 mb-4">Bienvenue sur Mini-CI/CD</h1>
+                <p class="lead">Une solution légère de CI/CD pour vos projets</p>
+                <div class="mt-5">
+                    <a href="/projects" class="btn btn-primary btn-lg me-3">Gérer les Projets</a>
+                    <a href="/builds" class="btn btn-outline-light btn-lg">Voir les Builds</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body feature-card">
+                        <div class="icon">
+                            <i class="bi bi-code-square"></i>
+                        </div>
+                        <h3 class="card-title">Projets</h3>
+                        <p class="card-text">Gérez vos projets et dépôts GitLab en un seul endroit.</p>
+                        <a href="/projects" class="btn btn-outline-primary">Voir les Projets</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body feature-card">
+                        <div class="icon">
+                            <i class="bi bi-gear"></i>
+                        </div>
+                        <h3 class="card-title">Builds</h3>
+                        <p class="card-text">Déclenchez des builds et surveillez l'état de vos pipelines CI/CD.</p>
+                        <a href="/builds" class="btn btn-outline-success">Voir les Builds</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body feature-card">
+                        <div class="icon">
+                            <i class="bi bi-speedometer2"></i>
+                        </div>
+                        <h3 class="card-title">Tableau de Bord</h3>
+                        <p class="card-text">Obtenez une vue d'ensemble de vos projets et des activités de build récentes.</p>
+                        <a href="/dashboard" class="btn btn-outline-info">Voir le Tableau de Bord</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card bg-dark text-light border-secondary">
+                    <div class="card-header">
+                        <h3>À propos de Mini-CI/CD</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Mini-CI/CD est une solution légère d'Intégration Continue et de Déploiement Continu qui vous aide à automatiser vos processus de compilation (build) et de déploiement:
+                        </p>
+                        <ul>
+                            <li>Intégration avec les dépôts GitLab</li>                            </li>
+                            <li>Builds automatisés avec Maven</li>
+                            <li>Historique des builds et journaux</li>
+                            <li>Gestion de projets</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

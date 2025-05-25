@@ -1,0 +1,490 @@
+/* Mini-CI/CD Custom Theme
+   A modern, cohesive dark theme with better contrast and readability
+*/
+
+:root {
+    /* Main color palette */
+    --primary-bg: #121420;
+    --secondary-bg: #1B1F3B;
+    --tertiary-bg: #272B4A;
+    --accent-color: #FF4D6D;
+    
+    /* Text colors */
+    --text-primary: #FFFFFF;
+    --text-secondary: #E0E0E0;
+    --text-muted: #CCCCCC;
+    
+    /* Status colors */
+    --status-success: #4CAF50;
+    --status-warning: #FF9800;
+    --status-danger: #F44336;
+    --status-info: #2196F3;
+    --status-pending: #78909C;
+    
+    /* Border colors */
+    --border-color: #3F3F67;
+    --border-light: #4F4F77;
+}
+
+/* Base styles */
+body {
+    background-color: var(--primary-bg);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    font-size: 16px;
+    letter-spacing: 0.3px;
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: var(--secondary-bg) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    color: var(--accent-color) !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
+    padding: 0.5rem 1rem;
+    margin: 0 0.2rem;
+    border-radius: 4px;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-dark .navbar-nav .nav-link.active {
+    color: var(--accent-color) !important;
+    font-weight: 600;
+    background-color: rgba(233, 69, 96, 0.1);
+}
+
+/* Card styling */
+.card {
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+    background-color: var(--tertiary-bg);
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+    padding: 1rem 1.25rem;
+    color: var(--text-primary);
+}
+
+.card-body {
+    padding: 1.5rem;
+    color: var(--text-primary);
+    background-color: var(--secondary-bg);
+}
+
+/* Table styling */
+.table {
+    color: var(--text-primary);
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 0;
+    background-color: var(--secondary-bg);
+}
+
+/* Ensure all tables have dark background */
+table, .table, .table-striped, .table-hover {
+    background-color: var(--secondary-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Override Bootstrap's default white background */
+.table>:not(caption)>*>* {
+    background-color: var(--secondary-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Ensure table headers have the right background */
+thead, th {
+    background-color: var(--tertiary-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+.table-dark, .table-striped {
+    background-color: var(--secondary-bg);
+    color: var(--text-primary);
+}
+
+.table-dark th {
+    background-color: var(--tertiary-bg);
+    border-color: var(--border-light);
+    padding: 1rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+.table-dark td {
+    border-color: var(--border-color);
+    padding: 0.75rem 1rem;
+    color: var(--text-primary);
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: var(--tertiary-bg);
+}
+
+.table-striped > tbody > tr:nth-of-type(even) {
+    background-color: var(--secondary-bg);
+}
+
+.table-responsive {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Button styling */
+.btn {
+    border-radius: 4px;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #d03a53;
+    border-color: #d03a53;
+}
+
+.btn-outline-primary {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:focus {
+    background-color: var(--accent-color);
+    color: var(--text-primary);
+}
+
+.btn-success {
+    background-color: var(--status-success);
+    border-color: var(--status-success);
+}
+
+.btn-info {
+    background-color: var(--status-info);
+    border-color: var(--status-info);
+}
+
+.btn-warning {
+    background-color: var(--status-warning);
+    border-color: var(--status-warning);
+}
+
+.btn-danger {
+    background-color: var(--status-danger);
+    border-color: var(--status-danger);
+}
+
+.btn-outline-light {
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+}
+
+.btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+/* Badge styling */
+.badge {
+    padding: 0.5em 0.8em;
+    font-weight: 600;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.bg-success {
+    background-color: var(--status-success) !important;
+}
+
+.bg-warning {
+    background-color: var(--status-warning) !important;
+}
+
+.bg-danger {
+    background-color: var(--status-danger) !important;
+}
+
+.bg-info {
+    background-color: var(--status-info) !important;
+}
+
+.bg-secondary {
+    background-color: var(--status-pending) !important;
+}
+
+/* Form styling */
+.form-control, .form-select {
+    background-color: var(--primary-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: var(--primary-bg);
+    border-color: var(--accent-color);
+    color: var(--text-primary);
+    box-shadow: 0 0 0 0.25rem rgba(233, 69, 96, 0.25);
+}
+
+.form-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+/* Footer styling */
+.footer {
+    background-color: var(--secondary-bg) !important;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-color);
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+    font-weight: 500;
+}
+
+/* Code and pre styling */
+pre, code {
+    background-color: #1E1E2D;
+    color: #e0e0e0;
+    border-radius: 6px;
+    padding: 1rem;
+    font-family: 'Consolas', 'Monaco', monospace;
+    overflow-x: auto;
+}
+
+/* Build logs styling */
+.logs-container {
+    background-color: #1E1E2D !important;
+    color: #E0E0E0 !important;
+    font-family: 'Consolas', 'Monaco', monospace !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    border: 1px solid #2D2D3A;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 1.5rem !important;
+}
+
+.logs-container code {
+    background-color: transparent;
+    padding: 0;
+    color: inherit;
+}
+
+/* Add some color to log output */
+.logs-container .success, .logs-container .info, .logs-container .warning, .logs-container .error {
+    font-weight: bold;
+}
+
+.logs-container .success {
+    color: #4CAF50;
+}
+
+.logs-container .info {
+    color: #2196F3;
+}
+
+.logs-container .warning {
+    color: #FF9800;
+}
+
+.logs-container .error {
+    color: #F44336;
+}
+
+/* Build status styling */
+.build-pending { 
+    background-color: rgba(120, 144, 156, 0.2) !important; 
+    color: var(--text-primary) !important; 
+    font-weight: 600;
+    border-left: 4px solid var(--status-pending);
+}
+
+.build-running { 
+    background-color: rgba(255, 152, 0, 0.2) !important; 
+    color: var(--text-primary) !important; 
+    font-weight: 600;
+    border-left: 4px solid var(--status-warning);
+}
+
+.build-success { 
+    background-color: rgba(76, 175, 80, 0.2) !important; 
+    color: var(--text-primary) !important; 
+    font-weight: 600;
+    border-left: 4px solid var(--status-success);
+}
+
+.build-failure { 
+    background-color: rgba(244, 67, 54, 0.2) !important; 
+    color: var(--text-primary) !important; 
+    font-weight: 600;
+    border-left: 4px solid var(--status-danger);
+}
+
+/* Badge icon spacing */
+.badge i {
+    margin-right: 5px;
+}
+
+/* Alert styling */
+.alert {
+    border-radius: 4px;
+    padding: 1rem 1.25rem;
+}
+
+.alert-success {
+    background-color: rgba(76, 175, 80, 0.2);
+    border-color: rgba(76, 175, 80, 0.3);
+    color: #c8e6c9;
+}
+
+.alert-danger {
+    background-color: rgba(244, 67, 54, 0.2);
+    border-color: rgba(244, 67, 54, 0.3);
+    color: #ffcdd2;
+}
+
+/* Dashboard stats cards */
+.stats-card {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    background-color: var(--secondary-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    height: 100%;
+}
+
+.stats-card h5.card-title {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stats-card h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 1rem 0;
+    color: var(--text-primary);
+}
+
+.stats-card .icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+    display: inline-block;
+    background-color: rgba(233, 69, 96, 0.1);
+    padding: 1rem;
+    border-radius: 50%;
+    line-height: 1;
+}
+
+/* Home page styling */
+.hero-section {
+    padding: 5rem 0 4rem;
+    text-align: center;
+    background: linear-gradient(180deg, var(--secondary-bg) 0%, var(--primary-bg) 100%);
+    border-radius: 8px;
+    margin-bottom: 3rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.hero-section h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.hero-section p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    color: var(--text-secondary);
+}
+
+.feature-card {
+    text-align: center;
+    padding: 2rem;
+}
+
+.feature-card .icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: var(--accent-color);
+}
+
+/* Links styling */
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #ff6b84;
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .hero-section {
+        padding: 2rem 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .table-responsive {
+        border: none;
+    }
+}

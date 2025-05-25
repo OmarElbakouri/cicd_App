@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Builds Échoués')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col">
+                <h1>Builds Échoués</h1>
+                <div class="btn-group" role="group">
+                    <a th:href="@{/projects}" class="btn btn-secondary">Retour aux Projets</a>
+                    <a th:href="@{/builds/success}" class="btn btn-success">Voir les Builds Réussis</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Historique des Builds Échoués</h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${#lists.isEmpty(failureBuilds)}" class="alert alert-info">
+                            Aucun build échoué trouvé.
+                        </div>
+                        <table th:if="${not #lists.isEmpty(failureBuilds)}" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Projet</th>
+                                    <th>Statut</th>
+                                    <th>Heure de début</th>
+                                    <th>Heure de fin</th>
+                                    <th>Durée</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="build : ${failureBuilds}" class="build-failure">
+                                    <td th:text="${build.id}"></td>
+                                    <td>
+                                        <a th:href="@{/projects/{id}(id=${build.project.id})}" th:text="${build.project.name}"></a>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-danger">
+                                            <i class="bi bi-x-circle"></i>
+                                            <span th:text="${build.status}"></span>
+                                        </span>
+                                    </td>
+                                    <td th:text="${#temporals.format(build.startTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                    <td th:text="${build.endTime != null ? #temporals.format(build.endTime, 'yyyy-MM-dd HH:mm:ss') : 'En cours'}"></td>
+                                    <td th:text="${build.endTime != null ? #temporals.format(build.endTime, 'HH:mm:ss') + ' - ' + #temporals.format(build.startTime, 'HH:mm:ss') : 'En cours...'}"></td>
+                                    <td>
+                                        <a th:href="@{/builds/{id}(id=${build.id})}" class="btn btn-sm btn-info">Voir</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,66 @@
+@startuml
+!theme plain
+skinparam actorStyle awesome
+title Diagramme de Cas d'Utilisation - Mini-CI/CD
+
+actor "Développeur" as Dev
+actor "Administrateur" as Admin
+actor "Système CI/CD" as System
+
+rectangle "Mini-CI/CD" {
+  package "Gestion des Projets" {
+    usecase "Créer un projet" as UC1
+    usecase "Modifier un projet" as UC2
+    usecase "Supprimer un projet" as UC3
+    usecase "Consulter les projets" as UC4
+  }
+
+  package "Gestion des Builds" {
+    usecase "Déclencher un build" as UC5
+    usecase "Consulter les builds" as UC6
+    usecase "Consulter les builds réussis" as UC7
+    usecase "Consulter les builds échoués" as UC8
+    usecase "Consulter les logs d'un build" as UC9
+  }
+
+  package "Exécution des Builds" {
+    usecase "Cloner le dépôt Git" as UC10
+    usecase "Exécuter le build Maven" as UC11
+    usecase "Capturer les logs" as UC12
+    usecase "Mettre à jour le statut du build" as UC13
+    usecase "Créer un projet de démonstration" as UC14
+  }
+
+}
+
+Dev --> UC1
+Dev --> UC2
+Dev --> UC3
+Dev --> UC4
+Dev --> UC5
+Dev --> UC6
+Dev --> UC7
+Dev --> UC8
+Dev --> UC9
+Admin --> UC1
+Admin --> UC2
+Admin --> UC3
+Admin --> UC4
+Admin --> UC5
+Admin --> UC6
+Admin --> UC7
+Admin --> UC8
+Admin --> UC9
+System --> UC10
+System --> UC11
+System --> UC12
+System --> UC13
+System --> UC14
+UC5 ..> UC10 : <<include>>
+UC5 ..> UC11 : <<include>>
+UC5 ..> UC12 : <<include>>
+UC5 ..> UC13 : <<include>>
+UC10 ..> UC14 : <<extend>>
+UC6 <.. UC7 : <<extend>>
+UC6 <.. UC8 : <<extend>>
+@enduml

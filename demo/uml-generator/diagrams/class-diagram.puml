@@ -1,0 +1,129 @@
+@startuml
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+title Diagramme de Classes - Mini-CI/CD
+
+package "com.cicd.demo.model" {
+  class Project {
+    - id: Long
+    - name: String
+    - repositoryUrl: String
+    - branch: String
+    - createdAt: LocalDateTime
+    - builds: List<Build>
+    + onCreate(): void
+  }
+
+  class Build {
+    - id: Long
+    - project: Project
+    - status: BuildStatus
+    - logs: String
+    - startTime: LocalDateTime
+    - endTime: LocalDateTime
+    + onCreate(): void
+    + isCompleted(): boolean
+  }
+
+  enum BuildStatus {
+    PENDING
+    RUNNING
+    SUCCESS
+    FAILURE
+  }
+}
+
+package "com.cicd.demo.controller" {
+  class BuildController {
+    - buildService: BuildService
+    - projectService: ProjectService
+    + listBuilds(): String
+    + listSuccessBuilds(): String
+    + listFailureBuilds(): String
+    + viewBuild(id): String
+    + triggerBuild(projectId): String
+  }
+
+  class ProjectController {
+    - projectService: ProjectService
+    - buildService: BuildService
+    + listProjects(): String
+    + viewProject(id): String
+    + showCreateForm(): String
+    + createProject(project): String
+    + deleteProject(id): String
+  }
+
+  class DashboardController {
+    - projectService: ProjectService
+    - buildService: BuildService
+    + dashboard(): String
+  }
+}
+
+package "com.cicd.demo.service" {
+  interface BuildService {
+    + getAllBuilds(): List<Build>
+    + getRecentBuilds(limit): List<Build>
+    + getBuildsByProjectId(projectId): List<Build>
+    + getBuildById(id): Optional<Build>
+    + saveBuild(build): Build
+    + triggerBuild(projectId): Build
+  }
+
+  class BuildServiceImpl {
+    - buildRepository: BuildRepository
+    - projectService: ProjectService
+    - dockerImage: String
+    - dockerWorkdir: String
+    + getAllBuilds(): List<Build>
+    + getRecentBuilds(limit): List<Build>
+    + getBuildsByProjectId(projectId): List<Build>
+    + getBuildById(id): Optional<Build>
+    + saveBuild(build): Build
+    + triggerBuild(projectId): Build
+    - executeBuild(build): void
+    - prepareRunnerScript(): String
+  }
+
+  interface ProjectService {
+    + getAllProjects(): List<Project>
+    + getProjectById(id): Optional<Project>
+    + saveProject(project): Project
+    + deleteProject(id): void
+  }
+
+  class ProjectServiceImpl {
+    - projectRepository: ProjectRepository
+    + getAllProjects(): List<Project>
+    + getProjectById(id): Optional<Project>
+    + saveProject(project): Project
+    + deleteProject(id): void
+  }
+}
+
+package "com.cicd.demo.repository" {
+  interface BuildRepository {
+    + findAllByOrderByStartTimeDesc(pageable): List<Build>
+    + findByProjectId(projectId): List<Build>
+  }
+
+  interface ProjectRepository {
+  }
+}
+
+Project "1" *-- "*" Build
+Build *-- BuildStatus
+BuildController ..> BuildService
+BuildController ..> ProjectService
+ProjectController ..> ProjectService
+ProjectController ..> BuildService
+DashboardController ..> ProjectService
+DashboardController ..> BuildService
+BuildServiceImpl ..|> BuildService
+BuildServiceImpl ..> BuildRepository
+BuildServiceImpl ..> ProjectService
+ProjectServiceImpl ..|> ProjectService
+ProjectServiceImpl ..> ProjectRepository
+@enduml

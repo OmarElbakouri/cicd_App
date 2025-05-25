@@ -1,0 +1,41 @@
+# Fichiers et répertoires à ignorer lors de la construction de l'image Docker
+
+# Fichiers Maven
+target/
+!target/*.jar
+.mvn/wrapper/maven-wrapper.jar
+
+# Fichiers de développement
+.git
+.gitignore
+.github
+README.md
+HELP.md
+mvnw.cmd
+
+# Logs
+logs/
+*.log
+
+# Fichiers de configuration locale
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Répertoires de dépendances
+node_modules/
+
+# Fichiers IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.swp
+*.swo
+
+# Fichiers système
+.DS_Store
+Thumbs.db

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Edit Project')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col">
+                <h1>Edit Project</h1>
+                <a th:href="@{/projects}" class="btn btn-secondary">Back to Projects</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Edit Project Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/projects/{id}(id=${project.id})}" th:object="${project}" method="post">
+                            <input type="hidden" th:field="*{id}">
+                            <input type="hidden" th:field="*{createdAt}">
+                            
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Project Name</label>
+                                <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                                <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="repositoryUrl" class="form-label">Repository URL (GitLab)</label>
+                                <input type="text" class="form-control" id="repositoryUrl" th:field="*{repositoryUrl}" 
+                                       placeholder="https://gitlab.com/username/repository.git" required>
+                                <div class="text-danger" th:if="${#fields.hasErrors('repositoryUrl')}" th:errors="*{repositoryUrl}"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="branch" class="form-label">Branch</label>
+                                <input type="text" class="form-control" id="branch" th:field="*{branch}" placeholder="main">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Project</button>
+                            <a th:href="@{/projects/{id}(id=${project.id})}" class="btn btn-secondary">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>
