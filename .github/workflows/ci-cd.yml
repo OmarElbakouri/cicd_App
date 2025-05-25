@@ -1,0 +1,75 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up JDK 21
+      uses: actions/setup-java@v3
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+    
+    - name: Build with Maven
+      run: mvn -B clean package --file pom.xml
+    
+    - name: Run tests
+      run: mvn -B test
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-jar
+        path: target/*.jar
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    
+    - name: Build Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: false
+        tags: mini-cicd:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  # Décommentez cette section lorsque vous serez prêt à configurer le déploiement
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main'
+  #   
+  #   steps:
+  #   - name: Download build artifacts
+  #     uses: actions/download-artifact@v3
+  #     with:
+  #       name: app-jar
+  #       path: ./target
+  #   
+  #   - name: Login to Docker Hub
+  #     uses: docker/login-action@v2
+  #     with:
+  #       username: ${{ secrets.DOCKER_HUB_USERNAME }}
+  #       password: ${{ secrets.DOCKER_HUB_TOKEN }}
+  #   
+  #   - name: Build and push Docker image
+  #     uses: docker/build-push-action@v4
+  #     with:
+  #       context: .
+  #       push: true
+  #       tags: ${{ secrets.DOCKER_HUB_USERNAME }}/mini-cicd:latest
+  #   
+  #   # Ajoutez ici les étapes de déploiement vers votre environnement cible
+  #   # Par exemple, déploiement vers Azure Web App, Heroku, etc.
