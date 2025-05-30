@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+//Indique que les méthodes de la classe seront mappées aux URLs commençant par "/dashboard".
 @RequestMapping("/dashboard")
+//Indique que le contrôleur doit être initialisé avec des dépendances injectées.
 @RequiredArgsConstructor
 public class DashboardController {
 
@@ -18,6 +20,7 @@ public class DashboardController {
     private final BuildService buildService;
 
     @GetMapping
+    //Indique que la méthode dashboard() sera mappée à la requête GET sur "/dashboard".
     public String dashboard(Model model) {
         try {
             // Project stats

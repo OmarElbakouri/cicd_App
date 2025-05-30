@@ -12,20 +12,23 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/projects")
+//Indique que le contrôleur doit être initialisé avec des dépendances injectées.
 @RequiredArgsConstructor
+//Indique qu'une classe est un contrôleur Spring MVC qui gère les requêtes HTTP et retourne des vues.
 public class ProjectController {
 
     private final ProjectService projectService;
 
     @GetMapping
+    //Indique que la méthode listProjects() sera mappée à la requête GET sur "/projects".
     public String listProjects(Model model) {
         model.addAttribute("projects", projectService.getAllProjects());
         model.addAttribute("project", new Project());
         return "projects/list";
     }
 
-    @PostMapping
-    public String addProject(@Valid @ModelAttribute("project") Project project, 
+    @PostMapping 
+    public String addProject(@Valid/*demande à Spring de valider automatiquement l'objet*/  @ModelAttribute("project") Project project, 
                            BindingResult result, 
                            RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
@@ -38,7 +41,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    public String viewProject(@PathVariable Long id, Model model) {
+    public String viewProject(@PathVariable/* Extrait des variables depuis l'URL*/  Long id, Model model) {
         return projectService.getProjectById(id)
                 .map(project -> {
                     model.addAttribute("project", project);

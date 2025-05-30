@@ -26,18 +26,18 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-@Service
-@RequiredArgsConstructor
-@Slf4j
+@Service //Désigne une classe comme service Spring.         
+@RequiredArgsConstructor //Crée un constructeur avec tous les paramètres.
+@Slf4j //Ajoute des logs.
 public class BuildServiceImpl implements BuildService {
 
     private final BuildRepository buildRepository;
     private final ProjectService projectService;
 
-    @Value("${cicd.docker.image}")
+    @Value("${cicd.docker.image}") //Indique que la variable dockerImage sera injectée avec la valeur de la propriété cicd.docker.image.
     private String dockerImage;
 
-    @Value("${cicd.docker.workdir}")
+    @Value("${cicd.docker.workdir}") //Indique que la variable dockerWorkdir sera injectée avec la valeur de la propriété cicd.docker.workdir.
     private String dockerWorkdir;
 
     @Override

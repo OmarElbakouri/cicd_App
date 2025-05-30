@@ -1,3 +1,5 @@
+# Pipeline CI/CD simplifié pour Mini-CI/CD
+
 trigger:
   - main
 
@@ -7,7 +9,6 @@ pool:
 variables:
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
   MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
-  DOCKER_BUILDKIT: 1
 
 stages:
 - stage: Build
@@ -50,55 +51,21 @@ stages:
         ArtifactName: 'drop'
         publishLocation: 'Container'
 
-    - task: Docker@2
-      displayName: 'Build Docker Image'
-      inputs:
-        containerRegistry: 'dockerRegistryServiceConnection'
-        repository: '$(dockerRepository)'
-        command: 'build'
-        Dockerfile: '**/Dockerfile'
-        tags: |
-          $(Build.BuildId)
-          latest
-
-# Commenté la partie push de l'image Docker car elle nécessite une connexion Docker Registry configurée
-#    - task: Docker@2
-#      displayName: 'Push Docker Image'
-#      inputs:
-#        containerRegistry: 'dockerRegistryServiceConnection'
-#        repository: '$(dockerRepository)'
-#        command: 'push'
-#        tags: |
-#          $(Build.BuildId)
-#          latest
-
-# La partie déploiement est commentée jusqu'à ce que la connexion Azure soit configurée
+# Étape de déploiement simplifiée - à activer lorsque vous serez prêt
 # - stage: Deploy
-#   displayName: 'Deploy to Production'
+#   displayName: 'Deploy'
 #   dependsOn: Build
 #   condition: succeeded()
 #   jobs:
-#   - deployment: DeployToProduction
-#     displayName: 'Deploy to Production'
-#     environment: 'production'
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
-#           - task: DownloadBuildArtifacts@1
-#             inputs:
-#               buildType: 'current'
-#               downloadType: 'single'
-#               artifactName: 'drop'
-#               downloadPath: '$(System.ArtifactsDirectory)'
-#           
-#           - task: AzureWebApp@1
-#             displayName: 'Deploy to Azure Web App'
-#             inputs:
-#               azureSubscription: 'azureSubscriptionServiceConnection'
-#               appType: 'webAppContainer'
-#               appName: '$(webAppName)'
-#               deployToSlotOrASE: true
-#               resourceGroupName: '$(resourceGroupName)'
-#               slotName: 'production'
-#               containers: '$(dockerRegistry)/$(dockerRepository):$(Build.BuildId)'
+#   - job: Deploy
+#     displayName: 'Deploy Application'
+#     steps:
+#     - task: DownloadBuildArtifacts@1
+#       inputs:
+#         buildType: 'current'
+#         downloadType: 'single'
+#         artifactName: 'drop'
+#         downloadPath: '$(System.ArtifactsDirectory)'
+#     
+#     # Ajoutez ici les étapes de déploiement spécifiques à votre environnement
+#     # Par exemple, déploiement vers un serveur via SSH, Azure App Service, etc.
